@@ -11,10 +11,10 @@ const api = new WooCommerceRestApi({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const response = await api.get(`products/${id}`);
     return NextResponse.json(response.data);
   } catch (error) {
