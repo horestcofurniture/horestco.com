@@ -74,19 +74,16 @@ export async function getProduct(id: number): Promise<WooCommerceProduct> {
 
 export async function getProductBySlug(slug: string): Promise<WooCommerceProduct[]> {
   try {
-    // Construct the full URL for server-side requests
-    let url: string;
+    // Call WooCommerce API directly with authentication
+    const baseUrl = process.env.WOOCOMMERCE_URL;
+    const consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
+    const consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET;
     
-    if (typeof window === 'undefined') {
-      // Server-side: need absolute URL
-      const baseUrl = process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.NEXTAUTH_URL || 'http://localhost:3000';
-      url = `${baseUrl}/api/products?slug=${encodeURIComponent(slug)}`;
-    } else {
-      // Client-side: can use relative URL
-      url = `/api/products?slug=${encodeURIComponent(slug)}`;
+    if (!baseUrl || !consumerKey || !consumerSecret) {
+      throw new Error('WooCommerce API credentials not configured');
     }
+    
+    const url = `${baseUrl}/wp-json/wc/v3/products?slug=${encodeURIComponent(slug)}&consumer_key=${consumerKey}&consumer_secret=${consumerSecret}`;
     
     const response = await fetch(url);
     if (!response.ok) {
