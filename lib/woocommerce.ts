@@ -61,14 +61,8 @@ export async function getProduct(id: number): Promise<WooCommerceProduct> {
 
 export async function getProductBySlug(slug: string): Promise<WooCommerceProduct[]> {
   try {
-    // Get the base URL for server-side requests
-    const baseUrl = typeof window === 'undefined' 
-      ? (process.env.VERCEL_URL 
-          ? `https://${process.env.VERCEL_URL}`
-          : process.env.NEXTAUTH_URL || 'http://localhost:3000')
-      : '';
-    
-    const response = await fetch(`${baseUrl}/api/products?slug=${encodeURIComponent(slug)}`);
+    // Always call the local API route using a relative URL
+    const response = await fetch(`/api/products?slug=${encodeURIComponent(slug)}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
