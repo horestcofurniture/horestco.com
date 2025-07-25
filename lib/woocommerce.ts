@@ -15,14 +15,20 @@ export async function getProducts(params?: WooCommerceProductQueryParams): Promi
     if (params?.featured) searchParams.set('featured', 'true');
     if (params?.page) searchParams.set('page', params.page.toString());
     
-    // Get the base URL for server-side requests
-    const baseUrl = typeof window === 'undefined' 
-      ? (process.env.VERCEL_URL 
-          ? `https://${process.env.VERCEL_URL}`
-          : process.env.NEXTAUTH_URL || 'http://localhost:3000')
-      : '';
+    // Construct the full URL for server-side requests
+    let url: string;
     
-    const url = `${baseUrl}/api/products?${searchParams.toString()}`;
+    if (typeof window === 'undefined') {
+      // Server-side: need absolute URL
+      const baseUrl = process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXTAUTH_URL || 'http://localhost:3000';
+      url = `${baseUrl}/api/products?${searchParams.toString()}`;
+    } else {
+      // Client-side: can use relative URL
+      url = `/api/products?${searchParams.toString()}`;
+    }
+    
     console.log('Making request to', url); // Debug log
     
     const response = await fetch(url);
@@ -41,14 +47,21 @@ export async function getProducts(params?: WooCommerceProductQueryParams): Promi
 
 export async function getProduct(id: number): Promise<WooCommerceProduct> {
   try {
-    // Get the base URL for server-side requests
-    const baseUrl = typeof window === 'undefined' 
-      ? (process.env.VERCEL_URL 
-          ? `https://${process.env.VERCEL_URL}`
-          : process.env.NEXTAUTH_URL || 'http://localhost:3000')
-      : '';
+    // Construct the full URL for server-side requests
+    let url: string;
     
-    const response = await fetch(`${baseUrl}/api/products/${id}`);
+    if (typeof window === 'undefined') {
+      // Server-side: need absolute URL
+      const baseUrl = process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXTAUTH_URL || 'http://localhost:3000';
+      url = `${baseUrl}/api/products/${id}`;
+    } else {
+      // Client-side: can use relative URL
+      url = `/api/products/${id}`;
+    }
+    
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -61,8 +74,21 @@ export async function getProduct(id: number): Promise<WooCommerceProduct> {
 
 export async function getProductBySlug(slug: string): Promise<WooCommerceProduct[]> {
   try {
-    // Always call the local API route using a relative URL
-    const response = await fetch(`/api/products?slug=${encodeURIComponent(slug)}`);
+    // Construct the full URL for server-side requests
+    let url: string;
+    
+    if (typeof window === 'undefined') {
+      // Server-side: need absolute URL
+      const baseUrl = process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXTAUTH_URL || 'http://localhost:3000';
+      url = `${baseUrl}/api/products?slug=${encodeURIComponent(slug)}`;
+    } else {
+      // Client-side: can use relative URL
+      url = `/api/products?slug=${encodeURIComponent(slug)}`;
+    }
+    
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -76,14 +102,21 @@ export async function getProductBySlug(slug: string): Promise<WooCommerceProduct
 
 export async function getProductCategories(): Promise<WooCommerceProductCategory[]> {
   try {
-    // Get the base URL for server-side requests
-    const baseUrl = typeof window === 'undefined' 
-      ? (process.env.VERCEL_URL 
-          ? `https://${process.env.VERCEL_URL}`
-          : process.env.NEXTAUTH_URL || 'http://localhost:3000')
-      : '';
+    // Construct the full URL for server-side requests
+    let url: string;
     
-    const response = await fetch(`${baseUrl}/api/products/categories`);
+    if (typeof window === 'undefined') {
+      // Server-side: need absolute URL
+      const baseUrl = process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXTAUTH_URL || 'http://localhost:3000';
+      url = `${baseUrl}/api/products/categories`;
+    } else {
+      // Client-side: can use relative URL
+      url = `/api/products/categories`;
+    }
+    
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -97,14 +130,21 @@ export async function getProductCategories(): Promise<WooCommerceProductCategory
 
 export async function getProductCategory(id: number): Promise<WooCommerceProductCategory> {
   try {
-    // Get the base URL for server-side requests
-    const baseUrl = typeof window === 'undefined' 
-      ? (process.env.VERCEL_URL 
-          ? `https://${process.env.VERCEL_URL}`
-          : process.env.NEXTAUTH_URL || 'http://localhost:3000')
-      : '';
+    // Construct the full URL for server-side requests
+    let url: string;
     
-    const response = await fetch(`${baseUrl}/api/products/categories/${id}`);
+    if (typeof window === 'undefined') {
+      // Server-side: need absolute URL
+      const baseUrl = process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXTAUTH_URL || 'http://localhost:3000';
+      url = `${baseUrl}/api/products/categories/${id}`;
+    } else {
+      // Client-side: can use relative URL
+      url = `/api/products/categories/${id}`;
+    }
+    
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
