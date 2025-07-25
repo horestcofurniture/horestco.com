@@ -4,13 +4,13 @@ import { getProductBySlug, formatPrice, stripHtmlFromDescription, isProductOnSal
 import { WooCommerceProduct } from '@/lib/woocommerce-types';
 
 interface ProductPageProps {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
+  };
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = await params;
+  const { slug } = params;
   let product: WooCommerceProduct;
   
   try {
@@ -213,7 +213,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: ProductPageProps) {
   try {
-    const { slug } = await params;
+    const { slug } = params;
     const products = await getProductBySlug(slug);
     if (!products || products.length === 0) {
       return {
