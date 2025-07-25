@@ -3,13 +3,7 @@ import Image from 'next/image';
 import { getProductBySlug, formatPrice, stripHtmlFromDescription, isProductOnSale, getDiscountPercentage } from '@/lib/woocommerce';
 import { WooCommerceProduct } from '@/lib/woocommerce-types';
 
-interface ProductPageProps {
-  params: {
-    slug: string;
-  };
-}
-
-export default async function ProductPage({ params }: ProductPageProps) {
+export default async function ProductPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   let product: WooCommerceProduct;
   
@@ -211,7 +205,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 }
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: ProductPageProps) {
+export async function generateMetadata({ params }: { params: { slug: string } }) {
   try {
     const { slug } = params;
     const products = await getProductBySlug(slug);
