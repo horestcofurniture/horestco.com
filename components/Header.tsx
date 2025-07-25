@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -33,15 +32,12 @@ export default function Header({ siteName = 'Horestco Furniture' }: HeaderProps)
   ];
 
   return (
-    <motion.header 
+    <header 
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled 
           ? 'bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-lg' 
           : 'bg-transparent'
       }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -68,11 +64,7 @@ export default function Header({ siteName = 'Horestco Furniture' }: HeaderProps)
               <NavigationMenuList className="space-x-1">
                 {navigationItems.map((item, index) => (
                   <NavigationMenuItem key={item.href}>
-                    <motion.div
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
+                    <div>
                       <NavigationMenuLink asChild>
                         <Link href={item.href} className="cursor-pointer">
                           <Button 
@@ -87,7 +79,7 @@ export default function Header({ siteName = 'Horestco Furniture' }: HeaderProps)
                           </Button>
                         </Link>
                       </NavigationMenuLink>
-                    </motion.div>
+                    </div>
                   </NavigationMenuItem>
                 ))}
               </NavigationMenuList>
@@ -118,23 +110,20 @@ export default function Header({ siteName = 'Horestco Furniture' }: HeaderProps)
                   
                   <div className="space-y-2">
                     {navigationItems.map((item, index) => (
-                      <motion.div
+                      <div
                         key={item.href}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
                       >
-                                                <Button 
+                        <Button 
                           asChild 
                           variant="ghost" 
-                          className="w-full justify-start space-x-3 h-12 hover:bg-gray-100 hover:text-black cursor-pointer"
+                          className="w-full justify-start space-x-3 h-12 hover:bg-gray-100 hover:text-black transition-colors duration-200 cursor-pointer"
                         >
                           <Link href={item.href} className="cursor-pointer">
                             <item.icon className="h-5 w-5" />
                             <span>{item.label}</span>
                           </Link>
                         </Button>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
 
@@ -145,6 +134,6 @@ export default function Header({ siteName = 'Horestco Furniture' }: HeaderProps)
           </div>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 } 
