@@ -15,9 +15,17 @@ export async function getProducts(params?: WooCommerceProductQueryParams): Promi
     if (params?.featured) searchParams.set('featured', 'true');
     if (params?.page) searchParams.set('page', params.page.toString());
     
-    console.log('Client: Making request to', `/api/products?${searchParams.toString()}`); // Debug log
+    // Get the base URL for server-side requests
+    const baseUrl = typeof window === 'undefined' 
+      ? (process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}`
+          : process.env.NEXTAUTH_URL || 'http://localhost:3000')
+      : '';
     
-    const response = await fetch(`/api/products?${searchParams.toString()}`);
+    const url = `${baseUrl}/api/products?${searchParams.toString()}`;
+    console.log('Making request to', url); // Debug log
+    
+    const response = await fetch(url);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -33,7 +41,14 @@ export async function getProducts(params?: WooCommerceProductQueryParams): Promi
 
 export async function getProduct(id: number): Promise<WooCommerceProduct> {
   try {
-    const response = await fetch(`/api/products/${id}`);
+    // Get the base URL for server-side requests
+    const baseUrl = typeof window === 'undefined' 
+      ? (process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}`
+          : process.env.NEXTAUTH_URL || 'http://localhost:3000')
+      : '';
+    
+    const response = await fetch(`${baseUrl}/api/products/${id}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -46,7 +61,14 @@ export async function getProduct(id: number): Promise<WooCommerceProduct> {
 
 export async function getProductBySlug(slug: string): Promise<WooCommerceProduct[]> {
   try {
-    const response = await fetch(`/api/products?slug=${encodeURIComponent(slug)}`);
+    // Get the base URL for server-side requests
+    const baseUrl = typeof window === 'undefined' 
+      ? (process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}`
+          : process.env.NEXTAUTH_URL || 'http://localhost:3000')
+      : '';
+    
+    const response = await fetch(`${baseUrl}/api/products?slug=${encodeURIComponent(slug)}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -60,7 +82,14 @@ export async function getProductBySlug(slug: string): Promise<WooCommerceProduct
 
 export async function getProductCategories(): Promise<WooCommerceProductCategory[]> {
   try {
-    const response = await fetch('/api/products/categories');
+    // Get the base URL for server-side requests
+    const baseUrl = typeof window === 'undefined' 
+      ? (process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}`
+          : process.env.NEXTAUTH_URL || 'http://localhost:3000')
+      : '';
+    
+    const response = await fetch(`${baseUrl}/api/products/categories`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -74,7 +103,14 @@ export async function getProductCategories(): Promise<WooCommerceProductCategory
 
 export async function getProductCategory(id: number): Promise<WooCommerceProductCategory> {
   try {
-    const response = await fetch(`/api/products/categories/${id}`);
+    // Get the base URL for server-side requests
+    const baseUrl = typeof window === 'undefined' 
+      ? (process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}`
+          : process.env.NEXTAUTH_URL || 'http://localhost:3000')
+      : '';
+    
+    const response = await fetch(`${baseUrl}/api/products/categories/${id}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

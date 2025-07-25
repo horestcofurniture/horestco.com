@@ -29,12 +29,10 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const rating = parseFloat(product.average_rating);
 
   return (
-    <div className="group h-full">
-    
-      <Card className="h-full flex flex-col overflow-hidden border-0 shadow-lg bg-white">
+    <Link href={`/furniture/${product.slug}`} className="group h-full block">
+        <Card className="h-full flex flex-col overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white/80 backdrop-blur-sm hover:bg-white cursor-pointer">
         {/* Image Container */}
         <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-          <Link href={`/products/${product.slug}`} className="block">
             <div className="relative w-full h-64 overflow-hidden">
               {mainImage ? (
                 <div className="relative w-full h-full">
@@ -59,7 +57,6 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
               
 
             </div>
-          </Link>
           
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col space-y-2">
@@ -104,11 +101,9 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           
           {/* Product Title */}
           <div>
-            <Link href={`/products/${product.slug}`}>
-              <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
-                {product.name}
-              </h3>
-            </Link>
+            <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
+              {product.name}
+            </h3>
           </div>
           
           {/* Rating */}
@@ -173,7 +168,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           
 
         </CardFooter>
-      </Card>
-    </div>
+        </Card>
+    </Link>
   );
 } 

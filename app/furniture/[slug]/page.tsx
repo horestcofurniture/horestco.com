@@ -28,7 +28,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const discountPercentage = getDiscountPercentage(product);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Product Images */}
         <div className="space-y-4">
@@ -44,7 +44,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               />
               {/* Sale badge */}
               {onSale && (
-                <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded text-sm font-semibold">
+                <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 rounded text-sm font-semibold">
                   -{discountPercentage}% OFF
                 </div>
               )}
@@ -137,13 +137,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <div className="flex items-center space-x-4">
               {onSale ? (
                 <>
-                  <span className="text-3xl font-bold text-green-600">
+                  <span className="text-3xl font-bold text-black">
                     {formatPrice(product.sale_price)}
                   </span>
                   <span className="text-xl text-gray-500 line-through">
                     {formatPrice(product.regular_price)}
                   </span>
-                  <span className="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded">
+                  <span className="bg-black text-white text-sm font-medium px-2.5 py-0.5 rounded">
                     Save {discountPercentage}%
                   </span>
                 </>
@@ -157,7 +157,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             {/* Stock status */}
             <div className="mt-3">
               {product.stock_status === 'instock' ? (
-                <span className="inline-flex items-center text-green-600 text-sm">
+                <span className="inline-flex items-center text-black text-sm">
                   <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
@@ -192,23 +192,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
           </div>
 
-          {/* Purchase button placeholder */}
-          <div className="border-t border-gray-200 pt-6">
-            <p className="text-sm text-gray-600 mb-4">
-              Visit our WooCommerce store to purchase this product.
-            </p>
-            <a
-              href={product.permalink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full bg-blue-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-            >
-              View in Store
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-          </div>
+
         </div>
       </div>
 
@@ -217,7 +201,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className="mt-16 border-t border-gray-200 pt-16">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Product Description</h2>
           <div 
-            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-800"
+            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-black hover:prose-a:text-gray-800"
             dangerouslySetInnerHTML={{ __html: product.description }}
           />
         </div>
@@ -248,7 +232,6 @@ export async function generateMetadata({ params }: ProductPageProps) {
       openGraph: {
         title: product.name,
         description,
-        type: 'product',
         images: product.images?.map(img => ({
           url: img.src,
           alt: img.alt || product.name

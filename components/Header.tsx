@@ -27,7 +27,7 @@ export default function Header({ siteName = 'Horestco Furniture' }: HeaderProps)
 
   const navigationItems = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/products', label: 'Products', icon: Package },
+    { href: '/furniture', label: 'Furniture', icon: Package },
     { href: '/about', label: 'About', icon: Info },
     { href: '/contact', label: 'Contact', icon: Mail },
   ];

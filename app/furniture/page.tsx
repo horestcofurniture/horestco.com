@@ -77,9 +77,9 @@ export default function ProductsPage() {
   }, [loadingMore, hasMore, page, loadProducts]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-16">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden bg-white">
+      <section className="relative pt-16 pb-20 overflow-hidden bg-white">
         {/* Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-1/4 w-72 h-72 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full blur-3xl opacity-20 animate-pulse" />
