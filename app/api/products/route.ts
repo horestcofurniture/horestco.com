@@ -1,16 +1,7 @@
 export const runtime = 'edge';
 
 import { NextRequest, NextResponse } from 'next/server';
-import WooCommerceRestApi from 'woocommerce-rest-ts-api';
-
-// Initialize WooCommerce API client (server-side only)
-const api = new WooCommerceRestApi({
-  url: process.env.WOOCOMMERCE_URL || '',
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
-  version: 'wc/v3',
-  queryStringAuth: true,
-});
+import { wooCommerceClient } from '../../../lib/woocommerce-client';
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,7 +28,7 @@ export async function GET(request: NextRequest) {
     
     console.log('API Request params:', params); // Debug log
     
-    const response = await api.get('products', params);
+    const response = await wooCommerceClient.get('products', params);
     
     return NextResponse.json(Array.isArray(response.data) ? response.data : []);
   } catch (error) {

@@ -4,6 +4,21 @@ import {
   WooCommerceProductCategory,
   WooCommerceProductQueryParams 
 } from './woocommerce-types';
+import { wooCommerceClient } from './woocommerce-client';
+
+// Helper function to construct API URLs consistently
+function getAPIUrl(endpoint: string): string {
+  if (typeof window === 'undefined') {
+    // Server-side: need absolute URL
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    return `${baseUrl}/api${endpoint}`;
+  } else {
+    // Client-side: can use relative URL
+    return `/api${endpoint}`;
+  }
+}
 
 // Products API functions (now calling internal API routes)
 export async function getProducts(params?: WooCommerceProductQueryParams): Promise<WooCommerceProduct[]> {
@@ -15,20 +30,7 @@ export async function getProducts(params?: WooCommerceProductQueryParams): Promi
     if (params?.featured) searchParams.set('featured', 'true');
     if (params?.page) searchParams.set('page', params.page.toString());
     
-    // Construct the full URL for server-side requests
-    let url: string;
-    
-    if (typeof window === 'undefined') {
-      // Server-side: need absolute URL
-      const baseUrl = process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.NEXTAUTH_URL || 'http://localhost:3000';
-      url = `${baseUrl}/api/products?${searchParams.toString()}`;
-    } else {
-      // Client-side: can use relative URL
-      url = `/api/products?${searchParams.toString()}`;
-    }
-    
+    const url = getAPIUrl(`/products?${searchParams.toString()}`);
     console.log('Making request to', url); // Debug log
     
     const response = await fetch(url);
@@ -47,19 +49,7 @@ export async function getProducts(params?: WooCommerceProductQueryParams): Promi
 
 export async function getProduct(id: number): Promise<WooCommerceProduct> {
   try {
-    // Construct the full URL for server-side requests
-    let url: string;
-    
-    if (typeof window === 'undefined') {
-      // Server-side: need absolute URL
-      const baseUrl = process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.NEXTAUTH_URL || 'http://localhost:3000';
-      url = `${baseUrl}/api/products/${id}`;
-    } else {
-      // Client-side: can use relative URL
-      url = `/api/products/${id}`;
-    }
+    const url = getAPIUrl(`/products/${id}`);
     
     const response = await fetch(url);
     if (!response.ok) {
@@ -74,23 +64,12 @@ export async function getProduct(id: number): Promise<WooCommerceProduct> {
 
 export async function getProductBySlug(slug: string): Promise<WooCommerceProduct[]> {
   try {
-    // Call WooCommerce API directly with authentication
-    const baseUrl = process.env.WOOCOMMERCE_URL;
-    const consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
-    const consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET;
+    // Use the new WooCommerce client for direct API calls
+    const response = await wooCommerceClient.get('products', { 
+      slug: encodeURIComponent(slug) 
+    });
     
-    if (!baseUrl || !consumerKey || !consumerSecret) {
-      throw new Error('WooCommerce API credentials not configured');
-    }
-    
-    const url = `${baseUrl}/wp-json/wc/v3/products?slug=${encodeURIComponent(slug)}&consumer_key=${consumerKey}&consumer_secret=${consumerSecret}`;
-    
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return Array.isArray(data) ? data : [];
+    return Array.isArray(response.data) ? response.data : [];
   } catch (error) {
     console.error('Error fetching product by slug:', error);
     throw new Error(`Failed to fetch product with slug ${slug}`);
@@ -99,19 +78,7 @@ export async function getProductBySlug(slug: string): Promise<WooCommerceProduct
 
 export async function getProductCategories(): Promise<WooCommerceProductCategory[]> {
   try {
-    // Construct the full URL for server-side requests
-    let url: string;
-    
-    if (typeof window === 'undefined') {
-      // Server-side: need absolute URL
-      const baseUrl = process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.NEXTAUTH_URL || 'http://localhost:3000';
-      url = `${baseUrl}/api/products/categories`;
-    } else {
-      // Client-side: can use relative URL
-      url = `/api/products/categories`;
-    }
+    const url = getAPIUrl('/products/categories');
     
     const response = await fetch(url);
     if (!response.ok) {
@@ -127,19 +94,7 @@ export async function getProductCategories(): Promise<WooCommerceProductCategory
 
 export async function getProductCategory(id: number): Promise<WooCommerceProductCategory> {
   try {
-    // Construct the full URL for server-side requests
-    let url: string;
-    
-    if (typeof window === 'undefined') {
-      // Server-side: need absolute URL
-      const baseUrl = process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.NEXTAUTH_URL || 'http://localhost:3000';
-      url = `${baseUrl}/api/products/categories/${id}`;
-    } else {
-      // Client-side: can use relative URL
-      url = `/api/products/categories/${id}`;
-    }
+    const url = getAPIUrl(`/products/categories/${id}`);
     
     const response = await fetch(url);
     if (!response.ok) {

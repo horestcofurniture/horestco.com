@@ -1,15 +1,7 @@
 export const runtime = 'edge';
 
 import { NextRequest, NextResponse } from 'next/server';
-import WooCommerceRestApi from 'woocommerce-rest-ts-api';
-
-const api = new WooCommerceRestApi({
-  url: process.env.WOOCOMMERCE_URL || '',
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
-  version: 'wc/v3',
-  queryStringAuth: true,
-});
+import { wooCommerceClient } from '../../../../../lib/woocommerce-client';
 
 export async function GET(
   request: NextRequest,
@@ -17,7 +9,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const response = await api.get(`products/categories/${id}`);
+    const response = await wooCommerceClient.get(`products/categories/${id}`);
     return NextResponse.json(response.data);
   } catch (error) {
     console.error('Error fetching product category:', error);
