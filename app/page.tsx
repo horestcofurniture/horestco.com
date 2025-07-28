@@ -89,22 +89,35 @@ export default function Home() {
 
         {/* Loading State */}
         {loading && !error && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {[...Array(20)].map((_, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-6 shadow-lg"
-              >
-                <div className="animate-pulse">
-                  <div className="bg-gray-200 h-64 rounded-xl mb-4"></div>
-                  <div className="space-y-3">
-                    <div className="bg-gray-200 h-4 rounded w-3/4"></div>
-                    <div className="bg-gray-200 h-4 rounded w-1/2"></div>
-                    <div className="bg-gray-200 h-8 rounded w-full"></div>
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="group h-full">
+                  <div className="h-full overflow-hidden border border-gray-100 rounded-lg">
+                    <div className="p-0">
+                      <div className="relative aspect-square overflow-hidden bg-gray-100">
+                        <div className="animate-pulse w-full h-full bg-gray-200" />
+                      </div>
+                      <div className="p-4 space-y-3">
+                        <div className="animate-pulse space-y-2">
+                          <div className="h-4 bg-gray-200 rounded w-3/4" />
+                          <div className="h-3 bg-gray-200 rounded w-full" />
+                          <div className="h-3 bg-gray-200 rounded w-5/6" />
+                        </div>
+                        <div className="h-px bg-gray-200 w-full" />
+                        <div className="flex items-center justify-between">
+                          <div className="animate-pulse h-6 bg-gray-200 rounded w-1/3" />
+                          <div className="flex items-center space-x-1">
+                            <div className="animate-pulse h-4 w-4 bg-gray-200 rounded-full" />
+                            <div className="animate-pulse h-4 bg-gray-200 rounded w-6" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 
