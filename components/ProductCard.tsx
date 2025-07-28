@@ -36,8 +36,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   const stockStatus = getStockStatus();
 
   return (
-    <Link href={`/furniture/${product.slug}`} className="block group h-full">
-      <Card className="h-full overflow-hidden border border-gray-100 hover:border-black transition-all duration-200 cursor-pointer">
+    <Link href={`/furniture/${product.slug}`} className="block group h-full cursor-pointer">
+      <Card className="h-full overflow-hidden border border-gray-100 hover:border-black transition-all duration-200">
         <CardContent className="p-0">
           <div className="relative aspect-square overflow-hidden bg-gray-100">
             {product.images && product.images.length > 0 ? (

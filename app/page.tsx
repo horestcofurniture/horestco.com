@@ -2,14 +2,11 @@
 
 import { getProducts } from '@/lib/woocommerce';
 import { WooCommerceProduct } from '@/lib/woocommerce-types';
-import ProductList from '@/components/ProductList';
+import ProductGrid from '@/components/ProductGrid';
 import HeroSection from '@/components/HeroSection';
 
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Package, Sparkles } from 'lucide-react';
-import Link from 'next/link';
+import { Package } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
@@ -68,80 +65,18 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Error State */}
-        {error && (
-          <div className="mb-12">
-            <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-2xl p-6 text-center">
-              <div className="flex items-center justify-center mb-4">
-                <div className="p-2 bg-red-100 rounded-full">
-                  <Sparkles className="h-6 w-6 text-red-600" />
-                </div>
-              </div>
-              <h3 className="text-lg font-semibold text-red-800 mb-2">
-                Unable to load products
-              </h3>
-              <p className="text-red-700">
-                Please check your WooCommerce configuration. Error: {error}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Loading State */}
-        {loading && !error && (
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="group h-full">
-                  <div className="h-full overflow-hidden border border-gray-100 rounded-lg">
-                    <div className="p-0">
-                      <div className="relative aspect-square overflow-hidden bg-gray-100">
-                        <div className="animate-pulse w-full h-full bg-gray-200" />
-                      </div>
-                      <div className="p-4 space-y-3">
-                        <div className="animate-pulse space-y-2">
-                          <div className="h-4 bg-gray-200 rounded w-3/4" />
-                          <div className="h-3 bg-gray-200 rounded w-full" />
-                          <div className="h-3 bg-gray-200 rounded w-5/6" />
-                        </div>
-                        <div className="h-px bg-gray-200 w-full" />
-                        <div className="flex items-center justify-between">
-                          <div className="animate-pulse h-6 bg-gray-200 rounded w-1/3" />
-                          <div className="flex items-center space-x-1">
-                            <div className="animate-pulse h-4 w-4 bg-gray-200 rounded-full" />
-                            <div className="animate-pulse h-4 bg-gray-200 rounded w-6" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Products Grid */}
-        {!loading && !error && (
-          <div>
-            <ProductList products={products} />
-          </div>
-        )}
-
-        {/* View All Products CTA */}
-        {products.length > 0 && (
-          <div className="text-center mt-16">
-            <Button asChild size="lg" className="bg-black text-white hover:bg-gray-800 px-8 py-6 text-lg rounded-xl">
-              <Link href="/furniture" className="flex items-center space-x-3">
-                <Package className="w-5 h-5" />
-                <span>View All Products</span>
-                <div>
-                  <ArrowRight className="w-5 h-5" />
-                </div>
-              </Link>
-            </Button>
-          </div>
-        )}
+        <div className="max-w-6xl mx-auto">
+          <ProductGrid 
+            products={products}
+            loading={loading}
+            error={error}
+            maxItems={4}
+            showViewAll={true}
+            viewAllHref="/furniture"
+            viewAllText="View All Products"
+          />
+        </div>
       </section>
     </div>
   );

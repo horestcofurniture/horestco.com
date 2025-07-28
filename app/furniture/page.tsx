@@ -2,12 +2,11 @@
 
 import { getProducts } from '@/lib/woocommerce';
 import { WooCommerceProduct } from '@/lib/woocommerce-types';
-import ProductCard from '@/components/ProductCard';
+import ProductGrid from '@/components/ProductGrid';
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Package, Filter, Grid, Sparkles, TrendingUp, Loader2 } from 'lucide-react';
+import { Package, Filter, Grid, TrendingUp, Loader2 } from 'lucide-react';
 import { useEffect, useState, useCallback, useRef } from 'react';
 
 export default function FurniturePage() {
@@ -118,58 +117,14 @@ export default function FurniturePage() {
             </Button>
           </div>
 
-          {/* Error State */}
-          {error && (
-            <div className="mb-12">
-              <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-2xl p-8 text-center">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="p-3 bg-red-100 rounded-full">
-                    <Sparkles className="h-8 w-8 text-red-600" />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold text-red-800 mb-3">
-                  Unable to load products
-                </h3>
-                <p className="text-red-700 mb-6">
-                  We're having trouble connecting to our product catalog. Please try again in a moment.
-                </p>
-                <Button 
-                  onClick={() => loadProducts(1, true)}
-                  className="bg-red-600 hover:bg-red-700 text-white"
-                >
-                  Try Again
-                </Button>
-              </div>
-            </div>
-          )}
-
           {/* Products Grid */}
-          {!error && (
-            <div className="space-y-12">
-              {products.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
-                  {products.map((product) => (
-                    <ProductCard 
-                      key={product.id} 
-                      product={product} 
-                    />
-                  ))}
-                </div>
-              ) : (
-                !loading && (
-                  <div className="text-center py-20">
-                    <div className="mx-auto w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-6 shadow-lg">
-                      <Package className="h-12 w-12 text-gray-400" />
-                    </div>
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-2">No Products Available</h3>
-                    <p className="text-gray-600 max-w-md mx-auto">
-                      Our furniture collection is currently being updated. Please check back soon!
-                    </p>
-                  </div>
-                )
-              )}
-            </div>
-          )}
+          <ProductGrid 
+            products={products}
+            loading={loading}
+            error={error}
+            gridCols="4"
+            className="mt-10"
+          />
 
           {/* Load More Button */}
           {!hasMore && products.length > 0 && !loading && (
