@@ -1,6 +1,6 @@
 # WordPress + WooCommerce Frontend
 
-A modern Next.js frontend that uses WordPress as a headless CMS and WooCommerce for e-commerce functionality.
+A modern Next.js frontend that uses WordPress as a headless CMS and WooCommerce for e-commerce functionality.!
 
 ## Features
 
