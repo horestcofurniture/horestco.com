@@ -6,11 +6,11 @@ import { proxyProductImages } from '../../../../lib/utils';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const wooCommerceClient = createWooCommerceClient();
-    const { id } = params;
+    const { id } = await params;
     
     const response = await wooCommerceClient.get(`products/${id}`);
     
