@@ -13,30 +13,10 @@ export interface WooCommerceResponse<T = any> {
   headers: Headers;
 }
 
-// Web Crypto API compatible hash function for edge runtimes
-async function hmacSha1(key: string, baseString: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(key);
-  const baseStringData = encoder.encode(baseString);
-  
-  const cryptoKey = await crypto.subtle.importKey(
-    'raw',
-    keyData,
-    { name: 'HMAC', hash: 'SHA-1' },
-    false,
-    ['sign']
-  );
-  
-  const signature = await crypto.subtle.sign('HMAC', cryptoKey, baseStringData);
-  const signatureArray = new Uint8Array(signature);
-  
-  // Convert to base64
-  return btoa(String.fromCharCode(...signatureArray));
-}
-
 export class WooCommerceRestClient {
   private readonly baseURL: string;
-  private readonly oauth: OAuth;
+  private readonly consumerKey: string;
+  private readonly consumerSecret: string;
   
   constructor(config: WooCommerceClientConfig) {
     if (!config.url || !config.consumerKey || !config.consumerSecret) {
@@ -44,18 +24,8 @@ export class WooCommerceRestClient {
     }
     
     this.baseURL = `${config.url.replace(/\/$/, '')}/wp-json/${config.version || 'wc/v3'}`;
-    
-    this.oauth = new OAuth({
-      consumer: {
-        key: config.consumerKey,
-        secret: config.consumerSecret,
-      },
-      signature_method: 'HMAC-SHA1',
-      hash_function: (base_string, key) => {
-        // This will be handled asynchronously in getAuthHeaders
-        return '';
-      },
-    });
+    this.consumerKey = config.consumerKey;
+    this.consumerSecret = config.consumerSecret;
   }
 
   private buildURL(endpoint: string, params?: Record<string, any>): string {
@@ -72,47 +42,20 @@ export class WooCommerceRestClient {
     return url.toString();
   }
 
-  private async getAuthHeaders(method: string, url: string): Promise<Record<string, string>> {
-    const requestData = {
-      url,
-      method: method.toUpperCase(),
-    };
-
-    // Generate the authorization data without signature first
-    const authData = this.oauth.authorize(requestData);
-    
-    // Create the signature base string manually
-    const parameters: Record<string, string | number> = { ...authData };
-    const parameterString = Object.keys(parameters)
-      .sort()
-      .map(key => `${key}=${encodeURIComponent(String(parameters[key]))}`)
-      .join('&');
-    
-    const signatureBaseString = [
-      method.toUpperCase(),
-      encodeURIComponent(url.split('?')[0]),
-      encodeURIComponent(parameterString)
-    ].join('&');
-    
-    const signingKey = `${encodeURIComponent(this.oauth.consumer.secret)}&`;
-    
-    // Generate signature using Web Crypto API
-    const signature = await hmacSha1(signingKey, signatureBaseString);
-    
-    // Add signature to auth data
-    authData.oauth_signature = signature;
-    
-    const authHeader = this.oauth.toHeader(authData);
+  private getAuthHeaders(): Record<string, string> {
+    // WooCommerce REST API uses Basic Auth with consumer key and secret
+    const credentials = `${this.consumerKey}:${this.consumerSecret}`;
+    const encodedCredentials = btoa(credentials);
     
     return {
-      'Authorization': authHeader.Authorization,
+      'Authorization': `Basic ${encodedCredentials}`,
       'Content-Type': 'application/json',
     };
   }
 
   async get<T = any>(endpoint: string, params?: Record<string, any>): Promise<WooCommerceResponse<T>> {
     const url = this.buildURL(endpoint, params);
-    const headers = await this.getAuthHeaders('GET', url);
+    const headers = this.getAuthHeaders();
     
     const response = await fetch(url, {
       method: 'GET',
@@ -134,7 +77,7 @@ export class WooCommerceRestClient {
 
   async post<T = any>(endpoint: string, data?: any, params?: Record<string, any>): Promise<WooCommerceResponse<T>> {
     const url = this.buildURL(endpoint, params);
-    const headers = await this.getAuthHeaders('POST', url);
+    const headers = this.getAuthHeaders();
     
     const response = await fetch(url, {
       method: 'POST',
@@ -157,7 +100,7 @@ export class WooCommerceRestClient {
 
   async put<T = any>(endpoint: string, data?: any, params?: Record<string, any>): Promise<WooCommerceResponse<T>> {
     const url = this.buildURL(endpoint, params);
-    const headers = await this.getAuthHeaders('PUT', url);
+    const headers = this.getAuthHeaders();
     
     const response = await fetch(url, {
       method: 'PUT',
@@ -180,7 +123,7 @@ export class WooCommerceRestClient {
 
   async delete<T = any>(endpoint: string, params?: Record<string, any>): Promise<WooCommerceResponse<T>> {
     const url = this.buildURL(endpoint, params);
-    const headers = await this.getAuthHeaders('DELETE', url);
+    const headers = this.getAuthHeaders();
     
     const response = await fetch(url, {
       method: 'DELETE',
@@ -201,10 +144,20 @@ export class WooCommerceRestClient {
   }
 }
 
-// Create and export a singleton instance
-export const wooCommerceClient = new WooCommerceRestClient({
-  url: process.env.WOOCOMMERCE_URL || '',
-  consumerKey: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
-  consumerSecret: process.env.WOOCOMMERCE_CONSUMER_SECRET || '',
-  version: 'wc/v3',
-}); 
+// Factory function to create WooCommerce client instance
+export function createWooCommerceClient(): WooCommerceRestClient {
+  const url = process.env.WOOCOMMERCE_URL;
+  const consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
+  const consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET;
+  
+  if (!url || !consumerKey || !consumerSecret) {
+    throw new Error('WooCommerce API credentials are required. Please check your environment variables: WOOCOMMERCE_URL, WOOCOMMERCE_CONSUMER_KEY, WOOCOMMERCE_CONSUMER_SECRET');
+  }
+  
+  return new WooCommerceRestClient({
+    url,
+    consumerKey,
+    consumerSecret,
+    version: 'wc/v3',
+  });
+} 

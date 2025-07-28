@@ -1,10 +1,13 @@
 export const runtime = 'edge';
 
 import { NextRequest, NextResponse } from 'next/server';
-import { wooCommerceClient } from '../../../lib/woocommerce-client';
+import { createWooCommerceClient } from '../../../lib/woocommerce-client';
+import { proxyProductImages } from '../../../lib/utils';
 
 export async function GET(request: NextRequest) {
   try {
+    const wooCommerceClient = createWooCommerceClient();
+    
     const { searchParams } = new URL(request.url);
     const per_page = searchParams.get('per_page') || '10';
     const status = searchParams.get('status') || 'publish';
@@ -26,11 +29,13 @@ export async function GET(request: NextRequest) {
       params.slug = slug;
     }
     
-    console.log('API Request params:', params); // Debug log
-    
     const response = await wooCommerceClient.get('products', params);
     
-    return NextResponse.json(Array.isArray(response.data) ? response.data : []);
+    // Proxy image URLs to avoid CORS issues
+    const products = Array.isArray(response.data) ? response.data : [];
+    const proxiedProducts = products.map(product => proxyProductImages(product));
+    
+    return NextResponse.json(proxiedProducts);
   } catch (error) {
     console.error('Error fetching products:', error);
     return NextResponse.json([], { status: 500 });

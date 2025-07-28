@@ -4,7 +4,7 @@ import {
   WooCommerceProductCategory,
   WooCommerceProductQueryParams 
 } from './woocommerce-types';
-import { wooCommerceClient } from './woocommerce-client';
+import { proxyProductImages } from './utils';
 
 // Helper function to construct API URLs consistently
 function getAPIUrl(endpoint: string): string {
@@ -64,12 +64,19 @@ export async function getProduct(id: number): Promise<WooCommerceProduct> {
 
 export async function getProductBySlug(slug: string): Promise<WooCommerceProduct[]> {
   try {
-    // Use the new WooCommerce client for direct API calls
-    const response = await wooCommerceClient.get('products', { 
-      slug: encodeURIComponent(slug) 
-    });
+    const searchParams = new URLSearchParams();
+    searchParams.set('slug', slug);
     
-    return Array.isArray(response.data) ? response.data : [];
+    const url = getAPIUrl(`/products?${searchParams.toString()}`);
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    // Note: The API route already proxies the images, so we don't need to do it again here
+    return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error('Error fetching product by slug:', error);
     throw new Error(`Failed to fetch product with slug ${slug}`);
