@@ -32,9 +32,7 @@ function getImageDomains(): string[] {
 const nextConfig: NextConfig = {
   images: {
     domains: getImageDomains(),
-  },
-  experimental: {
-    optimizePackageImports: ['@radix-ui/react-icons'],
+    unoptimized: true, // Required for Cloudflare Pages
   },
 };
 
