@@ -71,7 +71,7 @@ export default function FurniturePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="py-20 bg-white text-black border-b border-gray-100">
+      <section className="pt-28 pb-20 bg-white text-black border-b border-gray-100">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="space-y-6">
             <Badge className="px-6 py-3 bg-gray-100 text-black border-gray-300 text-lg">

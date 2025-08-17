@@ -35,7 +35,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="py-24 bg-white text-black border-b border-gray-100">
+      <section className="pt-32 pb-24 bg-white text-black border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <Badge className="px-4 py-2 bg-white text-black mb-6">

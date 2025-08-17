@@ -1,8 +1,8 @@
 export const runtime = 'edge';
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createWooCommerceClient } from '../../../../lib/woocommerce-client';
-import { proxyProductImages } from '../../../../lib/utils';
+import { createWooCommerceClient } from '@/lib/woocommerce-client';
+import { proxyProductImages } from '@/lib/utils';
 
 export async function GET(
   request: NextRequest,

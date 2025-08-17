@@ -14,6 +14,8 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured');
     const slug = searchParams.get('slug');
     const page = searchParams.get('page') || '1';
+    const category = searchParams.get('category');
+    const search = searchParams.get('search');
     
     const params: any = {
       per_page: parseInt(per_page),
@@ -27,6 +29,14 @@ export async function GET(request: NextRequest) {
     
     if (slug) {
       params.slug = slug;
+    }
+    
+    if (category) {
+      params.category = category;
+    }
+    
+    if (search) {
+      params.search = search;
     }
     
     const response = await wooCommerceClient.get('products', params);

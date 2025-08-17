@@ -29,6 +29,8 @@ export async function getProducts(params?: WooCommerceProductQueryParams): Promi
     if (params?.status) searchParams.set('status', params.status);
     if (params?.featured) searchParams.set('featured', 'true');
     if (params?.page) searchParams.set('page', params.page.toString());
+    if (params?.category) searchParams.set('category', params.category);
+    if (params?.search) searchParams.set('search', params.search);
     
     const url = getAPIUrl(`/products?${searchParams.toString()}`);
     console.log('Making request to', url); // Debug log
@@ -111,6 +113,32 @@ export async function getProductCategory(id: number): Promise<WooCommerceProduct
   } catch (error) {
     console.error('Error fetching product category:', error);
     throw new Error(`Failed to fetch product category ${id}`);
+  }
+}
+
+export async function getCategoryWithImage(categoryId: number): Promise<any> {
+  try {
+    const url = getAPIUrl(`/categories/${categoryId}/image`);
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.log(`Category ${categoryId} image not found or error: ${response.status}`);
+      return null;
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching category with image:', error);
+    return null;
+  }
+}
+
+export async function getCategoryBySlug(slug: string): Promise<WooCommerceProductCategory | null> {
+  try {
+    const categories = await getProductCategories();
+    return categories.find(cat => cat.slug === slug) || null;
+  } catch (error) {
+    console.error('Error finding category by slug:', error);
+    return null;
   }
 }
 

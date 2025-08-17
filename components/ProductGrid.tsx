@@ -2,7 +2,7 @@
 
 import ProductCard from './ProductCard';
 import { WooCommerceProduct } from '@/lib/woocommerce-types';
-import { Package, Loader2 } from 'lucide-react';
+import { Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface ProductGridProps {
@@ -69,19 +69,13 @@ export default function ProductGrid({
                   <div className="relative aspect-square overflow-hidden bg-gray-100">
                     <div className="animate-pulse w-full h-full bg-gray-200" />
                   </div>
-                  <div className="p-4 space-y-3">
-                    <div className="animate-pulse space-y-2">
+                  <div className="p-3 space-y-2">
+                    <div className="animate-pulse space-y-1">
                       <div className="h-4 bg-gray-200 rounded w-3/4" />
                       <div className="h-3 bg-gray-200 rounded w-full" />
-                      <div className="h-3 bg-gray-200 rounded w-5/6" />
                     </div>
-                    <div className="h-px bg-gray-200 w-full" />
-                    <div className="flex items-center justify-between">
-                      <div className="animate-pulse h-6 bg-gray-200 rounded w-1/3" />
-                      <div className="flex items-center space-x-1">
-                        <div className="animate-pulse h-4 w-4 bg-gray-200 rounded-full" />
-                        <div className="animate-pulse h-4 bg-gray-200 rounded w-6" />
-                      </div>
+                    <div className="flex items-center justify-start">
+                      <div className="animate-pulse h-5 bg-gray-200 rounded-full w-16" />
                     </div>
                   </div>
                 </div>
